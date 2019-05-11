@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open",
+    "start": "nodemon --exec babel-node index.js",
     "build": "webpack --mode production"
   },
   "repository": {
@@ -20,10 +20,12 @@
   "homepage": "https://github.com/ErlendAHall/Node-Subtitle-Manager#readme",
   "devDependencies": {
     "@babel/core": "^7.3.4",
+    "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.3.4",
     "babel-loader": "^8.0.5",
     "css-loader": "^2.1.1",
     "mini-css-extract-plugin": "^0.5.0",
+    "nodemon": "^1.18.10",
     "vue": "^2.6.9",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
@@ -31,6 +33,7 @@
   },
   "dependencies": {
     "chokidar": "^2.1.2",
+    "dotenv": "^7.0.0",
     "exiftool": "0.0.3",
     "opensubtitles-api": "^5.0.1"
   }
