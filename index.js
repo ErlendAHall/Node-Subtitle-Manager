@@ -1,7 +1,7 @@
-import 'dotenv/config';
+require ('dotenv').config();
 import { watcher } from './src/watcher';
-import {readMetadata} from './src/metadata';
-
+//import {readMetadata} from './src/metadata';
+import { MetadataReader } from './src/metadata.mjs';
 var subtitleQueue = [];
 Object.defineProperty(subtitleQueue, "push", {
     enumerable: false, // hide from for...in
@@ -9,7 +9,7 @@ Object.defineProperty(subtitleQueue, "push", {
     writable: false, // see above ^
     value: function () {
       for (var i = 0, n = this.length, l = arguments.length; i < l; i++, n++) {          
-        ProcessNewVideo(this, n, this[n] = arguments[i]); // assign/raise your event
+        ProcessVideo(this, n, this[n] = arguments[i]); // assign/raise your event
       }
       return n;
     }
@@ -17,21 +17,18 @@ Object.defineProperty(subtitleQueue, "push", {
 
 watcher
     .on ("add", path => {
-        console.log("prepush: " + subtitleQueue);
         subtitleQueue.push(path);
-        console.log("push: " + subtitleQueue);
-        // Retrieve metadata
-        //console.log("metadata: " + readMetadata(path));
+        //https://stackoverflow.com/questions/40593875/using-filesystem-in-node-js-with-async-await
+                //console.log("metadata: " + readMetadata(path));
         //console.log("prepop: " + subtitleQueue);
         //console.log("postpop: " + subtitleQueue);
         
     });
 
-function ProcessNewVideo() {
-    //Process metadata
-    console.log("preprocesspop: " + subtitleQueue);
-    subtitleQueue.pop();
-    console.log("postprocesspop: " + subtitleQueue);
+const ProcessVideo = async (videoPath) => {
+  try {
+    let res = await MetadataReader.prototype.readMetaData(videoPath.pop());
+    console.log(res);
+  } catch (err) {console.log(err)}
+
 }
-
-
