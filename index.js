@@ -2,6 +2,7 @@ require ('dotenv').config();
 import { watcher } from './src/watcher';
 //import {readMetadata} from './src/metadata';
 import { MetadataReader } from './src/metadata.mjs';
+import { SubtitleHandler } from './src/opensubutitles.mjs';
 var subtitleQueue = [];
 Object.defineProperty(subtitleQueue, "push", {
     enumerable: false, // hide from for...in
@@ -17,18 +18,18 @@ Object.defineProperty(subtitleQueue, "push", {
 
 watcher
     .on ("add", path => {
-        subtitleQueue.push(path);
-        //https://stackoverflow.com/questions/40593875/using-filesystem-in-node-js-with-async-await
-                //console.log("metadata: " + readMetadata(path));
-        //console.log("prepop: " + subtitleQueue);
-        //console.log("postpop: " + subtitleQueue);
-        
+        subtitleQueue.push(path);  
     });
 
 const ProcessVideo = async (videoPath) => {
   try {
-    let res = await MetadataReader.prototype.readMetaData(videoPath.pop());
-    console.log(res);
+    let nextVideo = videoPath.pop();
+    let metadata = await MetadataReader.prototype.readMetaData(nextVideo);
+    let videoStats = await MetadataReader.prototype.getVideoStats(nextVideo);
+
+    const 
+    console.log(metadata);
+    console.log(videoStats);
   } catch (err) {console.log(err)}
 
 }
