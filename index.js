@@ -27,7 +27,9 @@ const ProcessVideo = async (videoPath) => {
     let metadata = await MetadataReader.prototype.readMetaData(nextVideo);
     let videoStats = await MetadataReader.prototype.getVideoStats(nextVideo);
 
-    const 
+    //let test = SubtitleHandler.prototype.fetchSubtitle(metadata, videoStats);
+
+
     console.log(metadata);
     console.log(videoStats);
   } catch (err) {console.log(err)}

@@ -14,13 +14,24 @@ export class SubtitleHandler {
 
     }
 
-    fetchSubtitle(metadata) {
+    fetchSubtitle(metadata, videoStats, videoPath) {
         OpenSubtitles.search({
             sublanguageid: 'en',
             hash: '',
-            filesize: 
+            filesize: JSON.stringify(videoStats.size),
+            path: videoPath,
+            filename: "todo",
+            season: "todo",
+            episode: "todo",
+            extensions: ["srt"],
+            limit: ["best"],
+            imdbid: "todo",
+            fps: metadata.videoFrameRate,
+            gzip: false,
         });
     }
+
+    hash()
 
 
 
