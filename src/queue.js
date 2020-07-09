@@ -1,7 +1,10 @@
 import { MetadataReader } from "./metadata.js"
 import { SubtitleHandler } from "./subtitleHandler.js"
+
 var metaReader = Object.create(MetadataReader)
 var subtitleHandler = Object.create(SubtitleHandler)
+subtitleHandler.setup()
+subtitleHandler.initOpenSubtitles()
 
 /**
  * Returns an array that fires off a custom callback event whenever the push function in invoked.
@@ -24,16 +27,16 @@ var MediaQueue = function createMediaQueue() {
   return MediaQueue
 }
 
-async function ProcessVideo(videoPath) {
-  subtitleHandler.setup("", "")
-  subtitleHandler.initOpenSubtitles()
-
+async function ProcessVideo(videoPath, index) {
   try {
-    let nextVideo = videoPath.pop()
-    let metadata = await metaReader.readMetaData(nextVideo)
-    let videoStats = await metaReader.getVideoStats(nextVideo)
+    let nextVideo = videoPath[index]
 
-    let test = subtitleHandler.fetchSubtitle(metadata, videoStats)
+    if (nextVideo) {
+      let metadata = await metaReader.readMetaData(nextVideo)
+      let videoStats = await metaReader.getVideoStats(nextVideo)
+
+      let test = subtitleHandler.fetchSubtitle(metadata, videoStats)
+    }
   } catch (err) {
     throw new Error(err)
   }

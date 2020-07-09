@@ -1,35 +1,18 @@
 import exif from "exiftool"
-import fs from "fs"
+import { FSHandler } from "./fs.js"
 
-export var MetadataReader = {
-  getVideoStats(videoPath) {
-    return new Promise((resolve, reject) => {
-      return fs.stat(videoPath, (err, data) => {
-        if (err) {
-          reject(data)
-          throw new Error(err)
-        }
-        resolve(data)
-      })
+var MetadataReader = Object.create(FSHandler)
+
+MetadataReader.readMetaData = function (videoPath) {
+  var videoFile = this.readVideoFile(videoPath)
+  if (videoFile) {
+    exif.metadata(videoFile, (err, metadata) => {
+      if (err) {
+        throw new Error(err)
+      }
+      return metadata
     })
-  },
-
-  readMetaData(videoPath) {
-    return new Promise((resolve, reject) => {
-      return fs.readFile(videoPath, (err, data) => {
-        if (err) {
-          reject(err)
-          throw new Error(err)
-        }
-
-        return exif.metadata(data, (err, metadata) => {
-          if (err) {
-            reject(err)
-            throw new Error(err)
-          }
-          resolve(metadata)
-        })
-      })
-    })
-  },
+  }
 }
+
+export { MetadataReader }

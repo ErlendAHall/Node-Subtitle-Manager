@@ -1,15 +1,15 @@
 import OS from "opensubtitles-api"
 var openSubtitlesAPI = {}
 var SubtitleHandler = {
-  setup: function (username, password) {
-    this.username = username
-    this.password = password
+  setup: function () {
+    this.username = node.env.OSUSERNAME ?? ""
+    this.password = node.env.OSPASSWORD ?? ""
     this.authenticated = false
   },
 
   initOpenSubtitles: function () {
     openSubtitlesAPI = new OS({
-      useragent: "TemporaryUserAgent",
+      useragent: process.env.OSUSERAGENT,
       username: this.username,
       password: this.password,
       ssl: false,
@@ -21,20 +21,20 @@ var SubtitleHandler = {
     if (!openSubtitlesAPI) {
       throw new Error(openSubtitlesAPI + "is undefined")
     }
-    let res = await openSubtitlesAPI.search({
-      sublanguageid: "en",
-      hash: "",
-      filesize: JSON.stringify(videoStats.size),
-      path: videoPath,
-      filename: "todo",
-      season: "todo",
-      episode: "todo",
-      extensions: ["srt"],
-      limit: ["best"],
-      imdbid: "todo",
-      fps: metadata.videoFrameRate,
-      gzip: false,
-    })
+    //   return await openSubtitlesAPI.search({
+    //     sublanguageid: "en",
+    //     hash: "",
+    //     filesize: JSON.stringify(videoStats.size),
+    //     path: videoPath,
+    //     filename: "todo",
+    //     season: "todo",
+    //     episode: "todo",
+    //     extensions: ["srt"],
+    //     limit: "best",
+    //     imdbid: "todo",
+    //     fps: metadata.videoFrameRate,
+    //     gzip: false,
+    //   })
   },
 
   validateCredentials: async function (username, password) {
