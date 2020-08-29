@@ -1,23 +1,36 @@
 import OS from "opensubtitles-api"
+import "./docs.js"
+
 var openSubtitlesAPI = {}
 var SubtitleHandler = {
-  setup: function () {
-    this.username = node.env.OSUSERNAME ?? ""
-    this.password = node.env.OSPASSWORD ?? ""
+  setup: function (username, password) {
+    this.username = username
+    this.password = password
     this.authenticated = false
   },
 
-  initOpenSubtitles: function () {
+  /**
+   * Creates a new instance of the OpenSubtitles service
+   * This is also where a login request is sent.
+   */
+  initOpenSubtitles: function initOpenSubtitles() {
     openSubtitlesAPI = new OS({
       useragent: process.env.OSUSERAGENT,
       username: this.username,
       password: this.password,
       ssl: false,
     })
-    return this.validateCredentials(this.username, this.password)
+    this.authenticated = this.validateCredentials()
   },
 
-  fetchSubtitle: async function (metadata, videoStats, videoPath) {
+  /**
+   *
+   * @param {Metadata} metadata
+   * @param {Stat} videoStats
+   * @param {string} videoPath
+   * @returns {SubtitleSearch}
+   */
+  fetchSubtitle: async function fetchSubtitle(metadata, videoStats, videoPath) {
     if (!openSubtitlesAPI) {
       throw new Error(openSubtitlesAPI + "is undefined")
     }
@@ -34,20 +47,35 @@ var SubtitleHandler = {
     //     imdbid: "todo",
     //     fps: metadata.videoFrameRate,
     //     gzip: false,
+
     //   })
   },
 
-  validateCredentials: async function (username, password) {
-    // if (!username) {
-    //   throw new Error("username is" + typeof username)
-    // }
+  /**
+   * Creates an object to be relayed to OpenSubtitles
+   * @param {Metadata} metaData
+   * @param {Stat} videoStats
+   * @returns {SubtitleSearch} - the query object
+   */
+  createSubtitleRequest: function createSubtitleRequest(metaData, videoStats) {
+    return {}
+  },
 
-    // if (!password) {
-    //   throw new Error("password is" + typeof password)
-    // }
+  /**
+   * Verifies that the user is logged into OpenSubtitles.
+   * If the response contains a token, the user is logged in.
+   * @returns {boolean} true if authenticated
+   */
+  validateCredentials: async function validateCredentials() {
+    if (!this.username) {
+      throw new Error("username is" + typeof username)
+    }
 
+    if (!this.password) {
+      throw new Error("password is" + typeof password)
+    }
     let authenticated = await openSubtitlesAPI.login()
-    this.authenticated = Boolean(authenticated)
+    return authenticated.hasOwnProperty("token")
   },
 }
 

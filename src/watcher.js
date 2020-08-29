@@ -1,27 +1,27 @@
 import chokidar from "chokidar"
 import dotenv from "dotenv"
 dotenv.config()
-function createWatcher(queue) {
-  var DirWatcherProto = {
-    setupChokidar: function () {
-      return chokidar.watch(process.env.WATCHDIR, {
-        ignored: "*.srt",
-        persistent: true,
-        ignoreInitial: false,
-      })
-    },
 
-    watch: function (worker) {
-      worker.on("add", (path) => {
-        queue.push(path)
-      })
-    },
-  }
+/**
+ * Creates a Watcher object that uses Chokidar to watch for changes in a watch dir and push the new file to the media queue.
+ */
+var watcher = {
+  setupChokidar: function () {
+    return chokidar.watch(process.env.WATCHDIR, {
+      ignored: "*.srt",
+      persistent: true,
+      ignoreInitial: false,
+    })
+  },
 
-  let dirWatcher = Object.create(DirWatcherProto)
-  let worker = dirWatcher.setupChokidar()
-  dirWatcher.watch(worker)
-  return dirWatcher
+  watch: function () {
+    this.on("add", (path) => {
+      console.log(globalThis)
+      if (globalThis.queue) {
+        globalThis.queue.push(path)
+      }
+    })
+  },
 }
 
-export { createWatcher }
+export { watcher as Watcher }
